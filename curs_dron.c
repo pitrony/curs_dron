@@ -41,14 +41,15 @@ void printLevel(struct snake *head) позволяет считать колич
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
-//#include <System.Windows.Forms.Cursor.h>
+
 #define FIELD_SIZE 20
-#define MAX_DRONE_LEN 10
+#define MAX_DRONE_LEN 50
 #define FRAME_DELAY 100 // Delay per frame in milliseconds (10 FPS)
-#define MAX_PUMPKIN 10 // Maximum pumpkin that can be collected
+#define MAX_PUMPKIN 50 // Maximum pumpkin that can be collected
 #define MAX_PUMPKIN_SIZE 10
 #define MAX_X 20
 #define MAX_Y 20
+double DELAY=1.0;
 
 
 struct control_buttons
@@ -114,22 +115,17 @@ printf("%c", spoint[1]);
 
 	
 //int field[FIELD_SIZE][FIELD_SIZE];
-//Drone_t drone;
 
 // Global console handle
 HANDLE hConsole;
 enum {LEFT=1, UP, RIGHT, DOWN, STOP_GAME='Q', CONTROLS=3};
 struct control_buttons default_controls[CONTROLS]={{'s','w','a','d'} , {'S','W','A','D'}}; 
-// Function prototypes
-//void initialize_field();
-//void display_field();
-//void show_color_menu();
-//void set_drone_color(int color);
-//void apply_drone_color();
-//void save_state();
-//void load_state();
-//bool check_victory();
-//void empty_carts();
+//isCrush(Drone_t *drone); test for crash head and tail
+//void show_color_menu(); menu choice  color 
+//void set_drone_color(int color); set  color for dron
+//void apply_drone_color(); set color for print dron
+//void save_state(); save new score
+//void load_state(); load last score
 //void print_message(const char* message);
 void hide_cursor();
 
@@ -179,7 +175,7 @@ void apply_drone_color(struct Drone_t drone) { // Apply the color selected for t
 }
 
 
-void printDrone(struct Drone_t drone, pumpkin_t pumpkin){
+void printDrone(struct Drone_t drone,/*struct Drone_t drone2,*/ pumpkin_t pumpkin){
 		char matrix[MAX_X][MAX_Y];
 		for (int i = 0; i < MAX_X; ++i){
 			for (int j = 0; j < MAX_Y; ++j)
@@ -190,9 +186,13 @@ void printDrone(struct Drone_t drone, pumpkin_t pumpkin){
 		if(pumpkin.isEaten==0) 
 		{matrix[pumpkin.x][pumpkin.y] = '$';}
 		matrix[drone.x][drone.y] = '@';
+		//matrix[drone2.x][drone2.y] = '%';
 			for (int i = 0; i < drone.tsize; ++i){
 			matrix[drone.tail[i].x][drone.tail[i].y] = '*';
 			}
+			//for (int i = 0; i < drone2.tsize; ++i){
+			//matrix[drone2.tail[i].x][drone2.tail[i].y] = '-';
+			//}
 		for (int j = 0; j < MAX_Y; ++j){
 			for (int i = 0; i < MAX_X; ++i)
 			{
@@ -248,6 +248,7 @@ if (drone.x == (pumpkin->x) && drone.y == (pumpkin->y))
 pumpkin->isEaten = 1;
 drone.tsize++;
 drone.count_pumpkin++;
+DELAY-=0.09;
 drone.tail = realloc(drone.tail, sizeof(tail_t) * drone.tsize);
 // Make sure the reallocation was successful
 if (drone.tail == NULL) {
@@ -313,31 +314,31 @@ printf("\n");
 system("pause");
 system("cls");
 }
-/*void generateSnakeDirection(snake_t *snake, struct food f){
-if ((snake->direction == LEFT || snake->direction == RIGHT)
-&& snake->y == food.y){
+void generateDroneDirection(Drone_t *drone, pumpkin_t pumpkin){
+if ((drone->direction == LEFT || drone->direction == RIGHT)
+&& drone->y == pumpkin.y){
 return;
 }
-if ((snake->direction == LEFT || snake->direction == RIGHT)
-&& snake->y != food.y){
-if (food.x == snake->x){
-snake->direction = UP;
-}
-return;
-}
-if ((snake->direction == UP || snake->direction == DOWN)
-&& snake->x == food.x){
-return;
-}
-if ((snake->direction == UP || snake->direction == DOWN)
-&& snake->x != food.x){
-if (food.y == snake->y){
-snake->direction = LEFT;
+if ((drone->direction == LEFT || drone->direction == RIGHT)
+&& drone->y != pumpkin.y){
+if (pumpkin.x == drone->x){
+drone->direction = UP;
 }
 return;
 }
+if ((drone->direction == UP || drone->direction == DOWN)
+&& drone->x == pumpkin.x){
+return;
 }
-*/
+if ((drone->direction == UP || drone->direction == DOWN)
+&& drone->x != pumpkin.x){
+if (pumpkin.y == drone->y){
+drone->direction = LEFT;
+}
+return;
+}
+}
+
 /*void hidecursor()
 {
    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -352,6 +353,89 @@ void hide_cursor() {
     cursorInfo.bVisible = FALSE; // Hide the cursor
     SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
+/*void save_state() {
+    FILE *file = fopen("drone_state.txt", "w");
+    if (file) {
+        // Save drone count
+        fprintf(file, "%d\n", drone.count_pumpkin);
+        //fprintf(file, "%d %d %d\n", drone.x, drone.y, drone.carts);
+        // Save the field state
+       //         }
+        fclose(file);
+        print_message("Game score saved!"); // Print save message at the bottom
+    }
+    else
+    {
+        print_message("Error saving game score."); // Print error message at the bottom
+    }
+} */
+
+// Load the state from a file
+/* void load_state() {
+    FILE *file = fopen("drone_state.txt", "r");
+    if (file) {
+        // Load drone position and cart count fscanf(file, "%d %d %d\n", &drone.x, &drone.y, &drone.carts);
+        // Load the field state
+        //for (int i = 0; i < FIELD_SIZE; i++) {
+          //  for (int j = 0; j < FIELD_SIZE; j++) {
+            //    fscanf(file, "%d ", &field[i][j]);
+           // }
+        
+        fscanf(file, "%d", &drone.count_pumpkin);
+         
+                    }
+           printf("Old record %d",drone.count_pumpkin)); // Move to the next line
+        }
+        fclose(file);
+        print_message("Game state loaded!"); // Print load message at the bottom
+    } else {
+        print_message("Error loading game state."); // Print error message at the bottom
+    }
+} */
+void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/ ){
+	int ex=9;
+	
+	printf("********************************************\n");
+	printf("*********** Game Drone *********************\n");
+	printf("******* Collect pumpkins *******************\n");
+	while(ex!=5)
+	{
+	printf("\nGame - 5\n");
+	printf("\nChange colors - 6\n");
+	printf("\nPrint old score - 7\n");
+	scanf("%d", &ex);
+	/*if(ex==7){
+	printf("%d", loadscore());
+	}
+	*/
+	if(ex==6){
+	printf("\nchoice for snake1 - 1\n");
+	printf("choice for snake2 - 2\n");
+	scanf("%d", &ex);
+	switch (ex)
+	{
+	case 1:
+	show_color_menu(drone);
+	//printf("Choice color for snake1 1-5: ");
+	//scanf("%d", &color_1);
+	break;
+	case 2:
+	//show_color_menu(&drone2);
+	//printf("\nChoice color for snske2 1-5: ");
+	//scanf("%d", &color_2);
+	break;
+	case 0:
+	break ;
+	default:
+	printf("choice 1-2 or 0 \n");
+	break;
+	}	//switch
+			}//if
+		}//while
+	
+} 
+
+
 
 int main()
 {
@@ -361,12 +445,13 @@ srand((unsigned int)time(NULL));
 hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 struct Drone_t drone =initDrone(2,2,2);
-show_color_menu(&drone);
+//struct Drone_t drone2 =initDrone(5,5,2);
+//show_color_menu(&drone);
+startMenu(&drone);
 hide_cursor();
 pumpkin_t pumpkin = initPUMPKIN();
 printDrone(drone, pumpkin);
 
-	
 while(1)
 		{
 		
@@ -380,21 +465,18 @@ while(1)
 		key=LEFT;
 		if(checkDirection(&drone, key))
 		{chageDirection(&drone, key);}
-		
 		break;	
 		case 's'://115 's'
 		case 'S'://83 'S'
 		key=DOWN;
 		if(checkDirection(&drone, key))
 		{chageDirection(&drone, key);}
-		
 		break;	
 		case 'd': //100 'd'
 		case 'D'://68 'D'
 		key=RIGHT;
 		if(checkDirection(&drone, key))
 		{chageDirection(&drone, key);}
-		
 		break;	
 		case 'w'://119 'w'
 		case 'W'://87 'W'
@@ -402,7 +484,31 @@ while(1)
 		if(checkDirection(&drone, key))
 		{chageDirection(&drone, key);}
 		break;	
-		
+		/* for drone2
+		case 'j':// 
+		case 'J':// 
+		key=LEFT;
+		if(checkDirection(&drone, key))
+		{chageDirection(&drone, key);}
+		break;	
+		case 'k'://
+		case 'K'://
+		key=DOWN;
+		if(checkDirection(&drone, key))
+		{chageDirection(&drone, key);}
+		break;	
+		case 'l': //
+		case 'L'://
+		key=RIGHT;
+		if(checkDirection(&drone, key))
+		{chageDirection(&drone, key);}
+		break;	
+		case 'i'://
+		case 'I'://
+		key=UP;
+		if(checkDirection(&drone, key))
+		{chageDirection(&drone, key);}
+		break;	*/
 		case 'Q'://81 'Q'
 		case 'q'://113 'q'
 		printExit(&drone);
@@ -414,15 +520,15 @@ while(1)
 		printf("\nGame in PAUSE\n\n");
 		system("pause");
 		break;
-		
 		default:
-		printf("w a s d - for control Q - for exit");
+		printf("w(i) a(j) s(k) d(l) - for control Q - for exit");
 		break;	
-			}
+			}//switch
 		//drone = moveDir(drone,key, &pumpkin);
-			}
+		}//if
 		else {
-			drone = moveDir(drone,key=drone.direction,&pumpkin);
+			generateDroneDirection(&drone, pumpkin);
+            drone = moveDir(drone,key=drone.direction,&pumpkin);
 			}
 	if(pumpkin.isEaten==1){
 	
@@ -430,7 +536,8 @@ while(1)
 	drone = moveDir(drone, key, &pumpkin);
 	//printDrone(drone, pumpkin);
 	}
-		sleep(1);
+	 usleep(DELAY*1000000);
+//	sleep(1);
 	system("cls");
 	
 	printDrone(drone, pumpkin);
