@@ -16,6 +16,7 @@ gotoxy(fp->y, fp->x);
 printf("%c", spoint[1]);
 }
 */
+extern  HANDLE hConsole;
 
 pumpkin_t initPUMPKIN(){
 pumpkin_t pumpkin;
@@ -36,7 +37,7 @@ void set_drone_color(int color, struct Drone_t *drone) {
     }
 }
 
-void show_color_menu(struct Drone_t *drone, void *hConsole) {
+void show_color_menu(struct Drone_t *drone) {
     int choice;
     printf("Choose a color for the drone:\n");
     printf("1. Red\n");
@@ -66,7 +67,7 @@ struct Drone_t initDrone(int x, int y, size_t tsize){
 		drone.direction=LEFT;
 	return drone;
 }
-void apply_drone_color(struct Drone_t *drone, void *hConsole) { // Apply the color selected for the drone
+void apply_drone_color(struct Drone_t *drone) { // Apply the color selected for the drone
     SetConsoleTextAttribute(hConsole, drone->color);
     //SetConsoleTextAttribute(&hConsole, drone.color);
 }
@@ -93,9 +94,9 @@ void printDrone(struct Drone_t drone,/*struct Drone_t drone2,*/ pumpkin_t pumpki
 		for (int j = 0; j < MAX_Y; ++j){
 			for (int i = 0; i < MAX_X; ++i)
 			{
-			apply_drone_color(&drone,&hConsole); // Set drone color
+			apply_drone_color(&drone); // Set drone color
             printf("%c", matrix[i][j]);
-            SetConsoleTextAttribute(&hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // Reset to default
+            SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // Reset to default
 			}
 				printf("\n");
 				}
@@ -250,7 +251,7 @@ return;
    SetConsoleCursorInfo(consoleHandle, &info);
 }
 */
-void hide_cursor(void *hConsole) {
+void hide_cursor() {
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(&hConsole, &cursorInfo);
     cursorInfo.bVisible = FALSE; // Hide the cursor
@@ -295,7 +296,7 @@ void hide_cursor(void *hConsole) {
         print_message("Error loading game state."); // Print error message at the bottom
     }
 } */
-void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/,void *hConsole){
+void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/){
 	int ex=9;
 	//int color_1=1;
 	//int color_2=1;
@@ -319,7 +320,7 @@ void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/,void *hConsole
 	switch (ex)
 	{
 	case 1:
-	show_color_menu(drone,&hConsole);
+	show_color_menu(drone);
 	//printf("Choice color for drone 1 1-5: ");
 	//scanf("%d", &color_1);
 	break;

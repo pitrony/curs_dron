@@ -11,7 +11,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-#include <Windows.h>
+#include <windows.h>
 #include <WinCon.h>
 //#include "dron_move.c"
 #define FIELD_SIZE 20
@@ -24,7 +24,8 @@
 
 //double DELAY=1.0;
 
-//HANDLE hConsole;
+static const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
 struct control_buttons
 {
  int down;
@@ -70,11 +71,11 @@ typedef struct Drone_t {
 } Drone_t;
 
 pumpkin_t initPUMPKIN();
-void hide_cursor(void *hConsole); 
+void hide_cursor(); 
 void set_drone_color(int color, struct Drone_t *drone);
-void apply_drone_color(struct Drone_t *drone, void *hConsole);
+void apply_drone_color(struct Drone_t *drone);
 void generateDroneDirection(Drone_t *drone, pumpkin_t *pumpkin);
-void show_color_menu(struct Drone_t *drone,void *hConsole);
+void show_color_menu(struct Drone_t *drone);
 struct Drone_t initDrone(int x, int y, size_t tsize);
 void printDrone(struct Drone_t drone,/*struct Drone_t drone2,*/ pumpkin_t pumpkin);
 Drone_t moveDir(Drone_t drone, int32_t dir, pumpkin_t *pumpkin);
@@ -88,5 +89,5 @@ void printExit(struct Drone_t *drone);
 //void load_state(); HANDLE hConsole;
 //hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/, void *hConsole );
+void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/ );
 #endif // CURS_DRON_H
