@@ -11,7 +11,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-#include <windows.h>
+#include <Windows.h>
+#include <WinCon.h>
 //#include "dron_move.c"
 #define FIELD_SIZE 20
 #define MAX_DRONE_LEN 50
@@ -63,15 +64,17 @@ typedef struct Drone_t {
 	struct control_buttons* controls;
 	struct cart_t *cart;
 	size_t tsize;
+	double DELAY;
     int count_pumpkin; // Number of collected pumpkins
     int color; // Drone color
 } Drone_t;
+
 pumpkin_t initPUMPKIN();
-void hide_cursor(); 
+void hide_cursor(void *hConsole); 
 void set_drone_color(int color, struct Drone_t *drone);
-void apply_drone_color(struct Drone_t drone);
+void apply_drone_color(struct Drone_t *drone, void *hConsole);
 void generateDroneDirection(Drone_t *drone, pumpkin_t *pumpkin);
-void show_color_menu(struct Drone_t *drone);
+void show_color_menu(struct Drone_t *drone,void *hConsole);
 struct Drone_t initDrone(int x, int y, size_t tsize);
 void printDrone(struct Drone_t drone,/*struct Drone_t drone2,*/ pumpkin_t pumpkin);
 Drone_t moveDir(Drone_t drone, int32_t dir, pumpkin_t *pumpkin);
@@ -80,8 +83,10 @@ _Bool IsCrashed(struct Drone_t *drone);
 void chageDirection(struct Drone_t* drone, const int32_t key);
 int checkDirection(Drone_t* drone, const int32_t key);
 void printExit(struct Drone_t *drone);
-void InitConsole()
+//oid InitConsole()
 //void save_state();
-//void load_state();
-void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/ );
+//void load_state(); HANDLE hConsole;
+//hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/, void *hConsole );
 #endif // CURS_DRON_H

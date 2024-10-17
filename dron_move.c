@@ -1,11 +1,6 @@
 //dron_move
 #include "curs_dron.h"
 //#include "curs_dron.c"
-//double DELAY=1.0;
-
-//HANDLE hConsole;
-
-
 /*void putPumpkin(struct pumpkins *fp)
 {
 char spoint[2];
@@ -41,7 +36,7 @@ void set_drone_color(int color, struct Drone_t *drone) {
     }
 }
 
-void show_color_menu(struct Drone_t *drone) {
+void show_color_menu(struct Drone_t *drone, void *hConsole) {
     int choice;
     printf("Choose a color for the drone:\n");
     printf("1. Red\n");
@@ -71,8 +66,9 @@ struct Drone_t initDrone(int x, int y, size_t tsize){
 		drone.direction=LEFT;
 	return drone;
 }
-void apply_drone_color(struct Drone_t drone) { // Apply the color selected for the drone
-    SetConsoleTextAttribute(&hConsole, drone.color);
+void apply_drone_color(struct Drone_t *drone, void *hConsole) { // Apply the color selected for the drone
+    SetConsoleTextAttribute(hConsole, drone->color);
+    //SetConsoleTextAttribute(&hConsole, drone.color);
 }
 
 
@@ -97,9 +93,9 @@ void printDrone(struct Drone_t drone,/*struct Drone_t drone2,*/ pumpkin_t pumpki
 		for (int j = 0; j < MAX_Y; ++j){
 			for (int i = 0; i < MAX_X; ++i)
 			{
-			apply_drone_color(drone); // Set drone color
+			apply_drone_color(&drone,&hConsole); // Set drone color
             printf("%c", matrix[i][j]);
-            SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // Reset to default
+            SetConsoleTextAttribute(&hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // Reset to default
 			}
 				printf("\n");
 				}
@@ -149,7 +145,7 @@ if (drone.x == (pumpkin->x) && drone.y == (pumpkin->y))
 pumpkin->isEaten = 1;
 drone.tsize++;
 drone.count_pumpkin++;
-DELAY-=0.09;
+drone.DELAY-=0.09;
 drone.cart = realloc(drone.cart, sizeof(cart_t) * drone.tsize);
 // Make sure the reallocation was successful
 if (drone.cart == NULL) {
@@ -254,9 +250,9 @@ return;
    SetConsoleCursorInfo(consoleHandle, &info);
 }
 */
-void hide_cursor() {
+void hide_cursor(void *hConsole) {
     CONSOLE_CURSOR_INFO cursorInfo;
-    GetConsoleCursorInfo(hConsole, &cursorInfo);
+    GetConsoleCursorInfo(&hConsole, &cursorInfo);
     cursorInfo.bVisible = FALSE; // Hide the cursor
     SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
@@ -299,7 +295,7 @@ void hide_cursor() {
         print_message("Error loading game state."); // Print error message at the bottom
     }
 } */
-void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/ ){
+void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/,void *hConsole){
 	int ex=9;
 	//int color_1=1;
 	//int color_2=1;
@@ -323,7 +319,7 @@ void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/ ){
 	switch (ex)
 	{
 	case 1:
-	show_color_menu(drone);
+	show_color_menu(drone,&hConsole);
 	//printf("Choice color for drone 1 1-5: ");
 	//scanf("%d", &color_1);
 	break;

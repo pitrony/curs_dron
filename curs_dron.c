@@ -31,7 +31,12 @@ void printLevel(struct snake *head) позволяет считать колич
 */
 
 #include "curs_dron.h"
-#include <stdint.h>
+#include <stdlib.h>
+//#include <time.h>
+//#include <stdio.h>
+#include <Windows.h>
+
+//#include <stdint.h>
 //isCrush(Drone_t *drone); test for crash head and tail
 //void show_color_menu(); menu choice  color 
 //void set_drone_color(int color); set  color for dron
@@ -42,21 +47,19 @@ void printLevel(struct snake *head) позволяет считать колич
 //void hide_cursor();
 
 double DELAY=1.0;
-
+HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+const int* ptr_hConsole=hConsole;
 int main()
 {
-	
 setlocale(LC_CTYPE, "");
 int32_t key;
 srand((unsigned int)time(NULL));
-HANDLE hConsole;
-hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 struct Drone_t drone =initDrone(2,2,2);
 //struct Drone_t drone2 =initDrone(5,5,2);
 //show_color_menu(&drone);
-startMenu(&drone);
-hide_cursor();
+startMenu(&drone, &hConsole);
+hide_cursor(&hConsole);
 pumpkin_t pumpkin = initPUMPKIN();
 printDrone(drone, pumpkin);
 
@@ -149,7 +152,8 @@ while(1)
 	drone = moveDir(drone, key, &pumpkin);
 	//printDrone(drone, pumpkin);
 	}
-	 usleep(DELAY*1000000);
+	DELAY=drone.DELAY;
+	usleep(DELAY*1000000);
 //	sleep(1);
 	system("cls");
 	
