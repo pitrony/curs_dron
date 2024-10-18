@@ -1,5 +1,7 @@
 //dron_move
 #include "curs_dron.h"
+#include <Windows.h>
+#include <stdlib.h>
 //#include "curs_dron.c"
 /*void putPumpkin(struct pumpkins *fp)
 {
@@ -16,7 +18,19 @@ gotoxy(fp->y, fp->x);
 printf("%c", spoint[1]);
 }
 */
-extern  HANDLE hConsole;
+//extern (HANDLE hConsole);
+HANDLE hConsole = initializeConsole();
+HANDLE initializeConsole(){
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hConsole == INVALID_HANDLE_VALUE) {
+        fprintf(stderr, "Error: Unable to get console handle\n");
+        exit(EXIT_FAILURE); // Exit if the handle is invalid
+    }
+    return hConsole;
+}
+ 
+
+
 
 pumpkin_t initPUMPKIN(){
 pumpkin_t pumpkin;
@@ -213,7 +227,7 @@ system("pause");
 system("cls");
 }
 /*void generateDroneDirection(Drone_t *drone, pumpkin_t pumpkin)
- * { //ver with board
+  { //ver with board
 if ((drone->direction == LEFT || drone->direction == RIGHT)
 && drone->y == pumpkin.y)
 {
@@ -240,9 +254,8 @@ drone->direction = LEFT;
 return;
 }
 }
-/*
- * 
-/*void hidecursor()
+ 
+void hidecursor()
 {
    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
    CONSOLE_CURSOR_INFO info;
@@ -250,13 +263,26 @@ return;
    info.bVisible = FALSE;
    SetConsoleCursorInfo(consoleHandle, &info);
 }
-*/
+
 void hide_cursor() {
     CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(&hConsole, &cursorInfo);
     cursorInfo.bVisible = FALSE; // Hide the cursor
     SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
+*/
+void hide_cursor(hConsole) {
+    CONSOLE_CURSOR_INFO cursor_info;
+    if (!GetConsoleCursorInfo(hConsole, &cursor_info)) {
+        fprintf(stderr, "Error: Unable to get cursor info\n");
+        return;
+    }
+    cursor_info.bVisible = false;
+    if (!SetConsoleCursorInfo(hConsole, &cursor_info)) {
+        fprintf(stderr, "Error: Unable to hide cursor\n");
+    }
+}
+
 /*void save_state() {
     FILE *file = fopen("drone_state.txt", "w");
     if (file) {
@@ -296,6 +322,10 @@ void hide_cursor() {
         print_message("Error loading game state."); // Print error message at the bottom
     }
 } */
+
+
+
+
 void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/){
 	int ex=9;
 	//int color_1=1;

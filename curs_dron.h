@@ -1,5 +1,6 @@
 #ifndef CURS_DRON_H
 #define CURS_DRON_H
+
 #include <stdint.h>
 #include <process.h>
 #include <unistd.h>
@@ -11,8 +12,10 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-#include <windows.h>
+#include <Windows.h>
 #include <WinCon.h>
+#include <ctype.h>
+
 //#include "dron_move.c"
 #define FIELD_SIZE 20
 #define MAX_DRONE_LEN 50
@@ -24,20 +27,17 @@
 
 //double DELAY=1.0;
 
-static const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-struct control_buttons
+ //HANDLE hConsole = initializeConsole();
+/*struct control_buttons
 {
  int down;
  int up;
  int left;
  int right;
 }control_buttons;
-
+struct control_buttons default_controls[CONTROLS]={{'s','w','a','d'} , {'S','W','A','D'}};*/
+//extern HANDLE hConsole;
 enum {LEFT=1, UP, RIGHT, DOWN, STOP_GAME='Q', CONTROLS=3};
-
-
-//struct control_buttons default_controls[CONTROLS]={{'s','w','a','d'} , {'S','W','A','D'}}; 
 
 typedef struct pumpkin_t{
 int x;
@@ -71,7 +71,7 @@ typedef struct Drone_t {
 } Drone_t;
 
 pumpkin_t initPUMPKIN();
-void hide_cursor(); 
+void hide_cursor(hConsole); 
 void set_drone_color(int color, struct Drone_t *drone);
 void apply_drone_color(struct Drone_t *drone);
 void generateDroneDirection(Drone_t *drone, pumpkin_t *pumpkin);
@@ -84,10 +84,10 @@ _Bool IsCrashed(struct Drone_t *drone);
 void chageDirection(struct Drone_t* drone, const int32_t key);
 int checkDirection(Drone_t* drone, const int32_t key);
 void printExit(struct Drone_t *drone);
-//oid InitConsole()
+
 //void save_state();
 //void load_state(); HANDLE hConsole;
 //hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
+HANDLE initializeConsole();
 void startMenu(struct Drone_t *drone/* , struct Drone_t *drone2*/ );
 #endif // CURS_DRON_H

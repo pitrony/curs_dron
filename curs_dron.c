@@ -34,7 +34,7 @@ void printLevel(struct snake *head) позволяет считать колич
 //#include <stdlib.h>
 //#include <time.h>
 //#include <stdio.h>
-#include <windows.h>
+#include <Windows.h>
 
 //#include <stdint.h>
 //isCrush(Drone_t *drone); test for crash head and tail
@@ -45,23 +45,24 @@ void printLevel(struct snake *head) позволяет считать колич
 //void load_state(); load last score
 //void print_message(const char* message);
 //void hide_cursor();
-
+ 
 double DELAY=1.0;
- extern HANDLE hConsole ;
-    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-    WORD saved_attributes;
+//extern HANDLE hConsole;
 //const int* ptr_hConsole=hConsole;
 int main()
 {
 setlocale(LC_CTYPE, "");
 int32_t key;
 srand((unsigned int)time(NULL));
-
+// HANDLE hConsole = initializeConsole();
+extern HANDLE hConsole;
 struct Drone_t drone =initDrone(2,2,2);
 //struct Drone_t drone2 =initDrone(5,5,2);
 //show_color_menu(&drone);
+
+
 startMenu(&drone);
-hide_cursor();
+hide_cursor(hConsole);
 pumpkin_t pumpkin = initPUMPKIN();
 printDrone(drone, pumpkin);
 
