@@ -45,7 +45,7 @@ void printLevel(struct snake *head) позволяет считать колич
 //void load_state(); load last score
 //void print_message(const char* message);
 //void hide_cursor();
- 
+HANDLE hConsole; 
 double DELAY=1.0;
 //extern HANDLE hConsole;
 //const int* ptr_hConsole=hConsole;
@@ -54,15 +54,15 @@ int main()
 setlocale(LC_CTYPE, "");
 int32_t key;
 srand((unsigned int)time(NULL));
-// HANDLE hConsole = initializeConsole();
-extern HANDLE hConsole;
+HANDLE hConsole = initializeConsole();
+//HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
 struct Drone_t drone =initDrone(2,2,2);
 //struct Drone_t drone2 =initDrone(5,5,2);
 //show_color_menu(&drone);
-
+system("cls");
 
 startMenu(&drone);
-hide_cursor(hConsole);
+hide_cursor();
 pumpkin_t pumpkin = initPUMPKIN();
 printDrone(drone, pumpkin);
 

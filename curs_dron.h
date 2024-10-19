@@ -71,7 +71,7 @@ typedef struct Drone_t {
 } Drone_t;
 
 pumpkin_t initPUMPKIN();
-void hide_cursor(hConsole); 
+void hide_cursor(); 
 void set_drone_color(int color, struct Drone_t *drone);
 void apply_drone_color(struct Drone_t *drone);
 void generateDroneDirection(Drone_t *drone, pumpkin_t *pumpkin);

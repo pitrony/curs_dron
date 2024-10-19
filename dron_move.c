@@ -18,8 +18,9 @@ gotoxy(fp->y, fp->x);
 printf("%c", spoint[1]);
 }
 */
-//extern (HANDLE hConsole);
-HANDLE hConsole = initializeConsole();
+extern HANDLE hConsole;
+//HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
+//HANDLE hConsole = initializeConsole();
 HANDLE initializeConsole(){
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hConsole == INVALID_HANDLE_VALUE) {
@@ -67,6 +68,20 @@ void show_color_menu(struct Drone_t *drone) {
 }
 
 // Set the drone color based on user selection
+void hide_cursor() {
+    CONSOLE_CURSOR_INFO cursor_info;
+    if (!GetConsoleCursorInfo(hConsole, &cursor_info)) {
+        fprintf(stderr, "Error: Unable to get cursor info\n");
+        return;
+    }
+    cursor_info.bVisible = false;
+    if (!SetConsoleCursorInfo(hConsole, &cursor_info)) {
+        fprintf(stderr, "Error: Unable to hide cursor\n");
+    }
+}
+
+
+
 struct Drone_t initDrone(int x, int y, size_t tsize){
 	struct Drone_t drone;
 	drone.x = x;
@@ -271,17 +286,7 @@ void hide_cursor() {
     SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
 */
-void hide_cursor(hConsole) {
-    CONSOLE_CURSOR_INFO cursor_info;
-    if (!GetConsoleCursorInfo(hConsole, &cursor_info)) {
-        fprintf(stderr, "Error: Unable to get cursor info\n");
-        return;
-    }
-    cursor_info.bVisible = false;
-    if (!SetConsoleCursorInfo(hConsole, &cursor_info)) {
-        fprintf(stderr, "Error: Unable to hide cursor\n");
-    }
-}
+
 
 /*void save_state() {
     FILE *file = fopen("drone_state.txt", "w");
