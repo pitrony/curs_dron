@@ -31,44 +31,26 @@ void printLevel(struct snake *head) позволяет считать колич
 */
 
 #include "curs_dron.h"
-//#include <stdlib.h>
-//#include <time.h>
-//#include <stdio.h>
 #include <Windows.h>
-
-//#include <stdint.h>
-//isCrush(Drone_t *drone); test for crash head and tail
-//void show_color_menu(); menu choice  color 
-//void set_drone_color(int color); set  color for dron
-//void apply_drone_color(); set color for print dron
-//void save_state(); save new score
-//void load_state(); load last score
-//void print_message(const char* message);
-//void hide_cursor();
-HANDLE hConsole; 
 double DELAY=1.0;
-//extern HANDLE hConsole;
-//const int* ptr_hConsole=hConsole;
+HANDLE hConsole;
+
 int main()
 {
 setlocale(LC_CTYPE, "");
 int32_t key;
 srand((unsigned int)time(NULL));
 HANDLE hConsole = initializeConsole();
-//HANDLE hConsole=GetStdHandle(STD_OUTPUT_HANDLE);
 struct Drone_t drone =initDrone(2,2,2);
-//struct Drone_t drone2 =initDrone(5,5,2);
-//show_color_menu(&drone);
+struct Drone_t drone2 =initDrone(5,5,2);
 system("cls");
-
-startMenu(&drone);
-hide_cursor();
+startMenu(&drone, &drone2);
+hide_cursor(hConsole);
 pumpkin_t pumpkin = initPUMPKIN();
-printDrone(drone, pumpkin);
+printDrone(drone, drone2, pumpkin, hConsole);
 
 while(1)
 		{
-		
 		if(_kbhit())
 		 {
         char tmp=(_getch());    
@@ -102,30 +84,31 @@ while(1)
 		case 'j':// 
 		case 'J':// 
 		key=LEFT;
-		if(checkDirection(&drone, key))
-		{chageDirection(&drone, key);}
+		if(checkDirection(&drone2, key))
+		{chageDirection(&drone2, key);}
 		break;	
 		case 'k'://
 		case 'K'://
 		key=DOWN;
-		if(checkDirection(&drone, key))
-		{chageDirection(&drone, key);}
+		if(checkDirection(&drone2, key))
+		{chageDirection(&drone2, key);}
 		break;	
 		case 'l': //
 		case 'L'://
 		key=RIGHT;
-		if(checkDirection(&drone, key))
-		{chageDirection(&drone, key);}
+		if(checkDirection(&drone2, key))
+		{chageDirection(&drone2, key);}
 		break;	
 		case 'i'://
 		case 'I'://
 		key=UP;
-		if(checkDirection(&drone, key))
-		{chageDirection(&drone, key);}
+		if(checkDirection(&drone2, key))
+		{chageDirection(&drone2, key);}
 		break;	*/
 		case 'Q'://81 'Q'
 		case 'q'://113 'q'
-		printExit(&drone);
+		printExit(&drone, &drone2);
+		save_state(&drone);
 		printf("\nBay!");
 		return 0;
 		break;
@@ -141,26 +124,28 @@ while(1)
 		//drone = moveDir(drone,key, &pumpkin);
 		}//if
 		else {
-			generateDroneDirection(&drone, &pumpkin);
+			generateDroneDirection(&drone2, &pumpkin);
             drone = moveDir(drone,key=drone.direction,&pumpkin);
-			if(IsCrashed(&drone))
+			drone2 = moveDir(drone2,key=drone2.direction,&pumpkin);
+			if(IsCrashed(&drone)||IsCrashed(&drone2))
 				{
 				printf("Crashed Game Over!");
-				printExit(&drone);
+				printExit(&drone, &drone2);
 				break;}
 			}
 	if(pumpkin.isEaten==1){
 	
 	pumpkin = initPUMPKIN();
 	drone = moveDir(drone, key, &pumpkin);
-	//printDrone(drone, pumpkin);
+	drone2 = moveDir(drone2, key, &pumpkin);
+	//printDrone(drone, pumpkin, hConsole);
 	}
 	DELAY=drone.DELAY;
 	usleep(DELAY*1000000);
-//	sleep(1);
+//	Sleep(1);
 	system("cls");
 	
-	printDrone(drone, pumpkin);
+	printDrone(drone, drone2, pumpkin, hConsole);
 	
 }  //while
 
