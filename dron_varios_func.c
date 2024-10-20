@@ -24,7 +24,9 @@ void load_state() {
     }
 } 
 void startMenu(struct Drone_t *drone, struct Drone_t *drone2){
-	int ex=9;
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // Reset to default
+    int ex=9;
+    int ch_auto=1;
 	while(ex!=5)
 	{
 	system("cls");
@@ -34,6 +36,7 @@ void startMenu(struct Drone_t *drone, struct Drone_t *drone2){
 	printf("\nGame - 5\n");
 	printf("\nChange colors - 6\n");
 	printf("\nPrint old score - 7\n");
+    printf("\nDrone2 choice auto  - 8\n");
 	scanf("%d", &ex);
 	if(ex==7)
     {
@@ -42,7 +45,13 @@ void startMenu(struct Drone_t *drone, struct Drone_t *drone2){
     printf("\n");
     system("pause");
 	}
-	
+	if(ex==8){
+	printf("\nchoice for drone 2 - 1 auto, 0 - manual \n");
+	scanf("%d", &ch_auto);
+    if(ch_auto==0)
+    drone2->mode_auto=0;// manual
+    else drone2->mode_auto=1;
+    }
 	if(ex==6){
 	printf("\nchoice for drone 1 - 1\n");
 	printf("choice for drone 2 - 2\n");
@@ -54,8 +63,6 @@ void startMenu(struct Drone_t *drone, struct Drone_t *drone2){
 	break;
 	case 2:
 	show_color_menu(drone2);
-	//printf("\nChoice color for drone 2 1-5: ");
-	//scanf("%d", &color_2);
 	break;
 	case 0:
 	break ;
@@ -67,8 +74,6 @@ void startMenu(struct Drone_t *drone, struct Drone_t *drone2){
 		}//while
 	
 } 
-
-
 void set_drone_color(int color, struct Drone_t *drone) {
     switch (color) {
         case 1: drone->color = FOREGROUND_RED | FOREGROUND_INTENSITY; break;   // Red
@@ -79,7 +84,6 @@ void set_drone_color(int color, struct Drone_t *drone) {
         default: drone->color = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE; // Default white
     }
 }
-
 // Set the drone's color by the user's choice
 void show_color_menu(struct Drone_t *drone) {
     int choice;
@@ -98,7 +102,6 @@ void apply_drone_color(struct Drone_t *drone, HANDLE hConsole) { // Apply the co
     SetConsoleTextAttribute(hConsole, drone->color);
     //SetConsoleTextAttribute(&hConsole, drone.color);
 }
-
 void hide_cursor(HANDLE hConsole) {
 	
     CONSOLE_CURSOR_INFO cursor_info;
@@ -111,7 +114,6 @@ void hide_cursor(HANDLE hConsole) {
         fprintf(stderr, "Error: Unable to hide cursor\n");
     }
 }
-
 void printExit(struct Drone_t *drone, struct Drone_t *drone2)
 {
 gotoxy(MAX_Y /2, MAX_X /2 - 3);
@@ -122,16 +124,6 @@ save_state(drone);
 system("pause");
 system("cls");
 }
-
-/*
-void hide_cursor() {
-    CONSOLE_CURSOR_INFO cursorInfo;
-    GetConsoleCursorInfo(&hConsole, &cursorInfo);
-    cursorInfo.bVisible = FALSE; // Hide the cursor
-    SetConsoleCursorInfo(hConsole, &cursorInfo);
-}
-*/
-
 void save_state(Drone_t *drone /*, pumpkin_t pumpkin*/) {
     FILE *file = fopen("drone_state.txt", "w");
     if (file) {

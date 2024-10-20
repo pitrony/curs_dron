@@ -13,16 +13,15 @@
 #include <time.h>
 #include <windows.h>
 #include <WinCon.h>
-//#include "dron_move.c"
+#include <memory.h>
 #define FIELD_SIZE 20
 #define MAX_DRONE_LEN 50
 #define FRAME_DELAY 100 // Delay per frame in milliseconds (10 FPS)
 #define MAX_PUMPKIN 50 // Maximum pumpkin that can be collected
-//#define MAX_PUMPKIN_SIZE 10
 #define MAX_X 20
 #define MAX_Y 20
-#define num_pumpkins 10
-//double DELAY=1.0;
+#define num_pumpkins 5 // pumpkins in field
+
 
 enum {LEFT=1, UP, RIGHT, DOWN, STOP_GAME='Q', CONTROLS=3};
 typedef struct pumpkin_t{
@@ -30,16 +29,6 @@ int x;
 int y;
 uint8_t isEaten;
 } pumpkin_t;
-
-/*struct pumpkins
-{
-int x;
-int y;
-time_t put_time;
-char point;
-uint8_t enable;
-} pumpkins[MAX_PUMPKIN_SIZE];
-*/
 typedef struct cart_t{
 	int x;
 	int y;
@@ -54,8 +43,8 @@ typedef struct Drone_t {
 	double DELAY;
     int count_pumpkin; // Number of collected pumpkins
     int color; // Drone color
+	int mode_auto;
 } Drone_t;
-
 pumpkin_t initPUMPKIN();
 void generatePUMPKIN(pumpkin_t pumpkins[], int num);
 HANDLE initializeConsole();
@@ -69,13 +58,10 @@ void printDrone(struct Drone_t drone, struct Drone_t drone2, pumpkin_t pumpkins[
 Drone_t moveDir(Drone_t drone, int32_t dir, pumpkin_t pumpkins[]);
 void gotoxy(int x,int y);
 _Bool IsCrashed(struct Drone_t *drone);
-void chageDirection(struct Drone_t* drone, const int32_t key);
+void changeDirection(struct Drone_t* drone, const int32_t key);
 int checkDirection(Drone_t* drone, const int32_t key);
 void printExit(struct Drone_t *drone,struct Drone_t *drone2);
-//void InitConsole()
 void save_state(Drone_t *drone /*, pumpkin_t pumpkin*/);
 void load_state();
-// HANDLE hConsole;
-//hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 void startMenu(struct Drone_t *drone, struct Drone_t *drone2 );
 #endif // CURS_DRON_H
