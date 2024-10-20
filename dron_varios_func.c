@@ -51,8 +51,6 @@ void startMenu(struct Drone_t *drone, struct Drone_t *drone2){
 	{
 	case 1:
 	show_color_menu(drone);
-	//printf("Choice color for drone 1 1-5: ");
-	//scanf("%d", &color_1);
 	break;
 	case 2:
 	show_color_menu(drone2);

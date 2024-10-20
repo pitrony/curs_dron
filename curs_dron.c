@@ -35,6 +35,7 @@ void printLevel(struct snake *head) позволяет считать колич
 double DELAY=1.0;
 HANDLE hConsole;
 
+
 int main()
 {
 setlocale(LC_CTYPE, "");
@@ -46,8 +47,10 @@ struct Drone_t drone2 =initDrone(5,5,2);
 system("cls");
 startMenu(&drone, &drone2);
 hide_cursor(hConsole);
-pumpkin_t pumpkin = initPUMPKIN();
-printDrone(drone, drone2, pumpkin, hConsole);
+//pumpkin_t pumpkin = initPUMPKIN();
+pumpkin_t pumpkins[num_pumpkins];
+generatePUMPKIN(pumpkins,num_pumpkins);
+printDrone(drone, drone2, pumpkins, hConsole);
 
 while(1)
 		{
@@ -124,28 +127,30 @@ while(1)
 		//drone = moveDir(drone,key, &pumpkin);
 		}//if
 		else {
-			generateDroneDirection(&drone2, &pumpkin);
-            drone = moveDir(drone,key=drone.direction,&pumpkin);
-			drone2 = moveDir(drone2,key=drone2.direction,&pumpkin);
+			generateDroneDirection(&drone2, pumpkins);
+            drone = moveDir(drone,key=drone.direction,pumpkins);
+			drone2 = moveDir(drone2,key=drone2.direction,pumpkins);
 			if(IsCrashed(&drone)||IsCrashed(&drone2))
 				{
 				printf("Crashed Game Over!");
 				printExit(&drone, &drone2);
 				break;}
 			}
-	if(pumpkin.isEaten==1){
-	
-	pumpkin = initPUMPKIN();
-	drone = moveDir(drone, key, &pumpkin);
-	drone2 = moveDir(drone2, key, &pumpkin);
+	for(int i=0;i<num_pumpkins;i++){
+	if(pumpkins[i].isEaten==1){
+	//pumpkin = initPUMPKIN();
+	generatePUMPKIN(pumpkins, num_pumpkins);
+	drone = moveDir(drone, key, pumpkins);
+	drone2 = moveDir(drone2, key, pumpkins);
 	//printDrone(drone, pumpkin, hConsole);
+	}
 	}
 	DELAY=drone.DELAY;
 	usleep(DELAY*1000000);
 //	Sleep(1);
 	system("cls");
 	
-	printDrone(drone, drone2, pumpkin, hConsole);
+	printDrone(drone, drone2, pumpkins, hConsole);
 	
 }  //while
 

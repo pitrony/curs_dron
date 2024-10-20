@@ -45,7 +45,15 @@ pumpkin.y = rand() % MAX_Y;
 pumpkin.isEaten = 0;
 return pumpkin;
 }
-
+void generatePUMPKIN(pumpkin_t pumpkins[], int num){
+//pumpkin_t pumpkin;
+srand(time(NULL));
+for(int i=0;i<num;i++){
+pumpkins[i].x = rand() % MAX_X;
+pumpkins[i].y = rand() % MAX_Y;
+pumpkins[i].isEaten = 0;}
+//return pumpkins[];
+}
 
 
 struct Drone_t initDrone(int x, int y, size_t tsize){
@@ -64,8 +72,7 @@ struct Drone_t initDrone(int x, int y, size_t tsize){
 	return drone;
 }
 
-
-void printDrone(struct Drone_t drone, struct Drone_t drone2, pumpkin_t pumpkin, HANDLE hConsole){
+void printDrone(struct Drone_t drone, struct Drone_t drone2, pumpkin_t pumpkins[], HANDLE hConsole){
 		char matrix[MAX_X][MAX_Y];
 		for (int i = 0; i < MAX_X; ++i){
 			for (int j = 0; j < MAX_Y; ++j)
@@ -73,8 +80,10 @@ void printDrone(struct Drone_t drone, struct Drone_t drone2, pumpkin_t pumpkin, 
 				matrix[i][j] = ' ';
 				}
 				}
-		if(pumpkin.isEaten==0) 
-		{matrix[pumpkin.x][pumpkin.y] = '$';}
+		for(int i=0;i<num_pumpkins;i++){
+			if(pumpkins[i].isEaten==0) 
+		{matrix[pumpkins[i].x][pumpkins[i].y] = '$';}
+			}
 		matrix[drone.x][drone.y] = '@';
 		matrix[drone2.x][drone2.y] = '%';
 			for (int i = 0; i < drone.tsize; ++i){
@@ -86,7 +95,10 @@ void printDrone(struct Drone_t drone, struct Drone_t drone2, pumpkin_t pumpkin, 
 		for (int j = 0; j < MAX_Y; ++j){
 			for (int i = 0; i < MAX_X; ++i)
 			{
-			apply_drone_color(&drone,hConsole); // Set drone color
+			if(matrix[i][j]=='@' ||matrix[i][j]=='*')
+			apply_drone_color(&drone,hConsole);
+			else if(matrix[i][j]=='%'|| matrix[i][j]=='-')
+			apply_drone_color(&drone2,hConsole); // Set drone color
             printf("%c", matrix[i][j]);
             SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE); // Reset to default
 			}
@@ -94,7 +106,7 @@ void printDrone(struct Drone_t drone, struct Drone_t drone2, pumpkin_t pumpkin, 
 				}
 	}
 	
-Drone_t moveDir(Drone_t drone, int32_t dir, pumpkin_t *pumpkin){
+Drone_t moveDir(Drone_t drone, int32_t dir, pumpkin_t pumpkins[]){
 	
 	for (int i = drone.tsize - 1; i > 0; i--)
 		{
@@ -131,9 +143,10 @@ case DOWN: //down
 		}
 	break;
 	}
-if (drone.x == (pumpkin->x) && drone.y == (pumpkin->y))
+for(int i=0;i<num_pumpkins;i++){
+if (drone.x == (pumpkins[i].x) && drone.y == (pumpkins[i].y))
 	{
-pumpkin->isEaten = 1;
+pumpkins[i].isEaten = 1;
 drone.tsize++;
 drone.count_pumpkin++;
 drone.DELAY-=0.09;
@@ -143,11 +156,7 @@ if (drone.cart == NULL) {
     printf("Error reallocating memory for drone cart!\n");
     exit(EXIT_FAILURE);}
     
-//pumpkin->x = rand() % MAX_X;
-  //  pumpkin->y = rand() % MAX_Y;
-    //pumpkin->isEaten = 0; 
-
-// *pumpkin = initPUMPKIN();
+	}
 	}
 	return drone;
 }
@@ -193,16 +202,12 @@ if ((drone->direction==LEFT && key!=RIGHT) || (drone->direction==RIGHT && key!=L
 	}
 return 0;
 }
-
-
-
 _Bool IsCrashed(struct Drone_t *drone){
 	for(size_t i=1; i<drone->tsize;i++)
 	if(drone->x==drone->cart[i].x && drone->y==drone->cart[i].y)
 		return 1;
 	return 0;
 	}
-
 void generateDroneDirection(Drone_t *drone, pumpkin_t *pumpkin){
 if ((drone->direction == LEFT || drone->direction == RIGHT)
 && drone->y == pumpkin->y){

@@ -18,10 +18,10 @@
 #define MAX_DRONE_LEN 50
 #define FRAME_DELAY 100 // Delay per frame in milliseconds (10 FPS)
 #define MAX_PUMPKIN 50 // Maximum pumpkin that can be collected
-#define MAX_PUMPKIN_SIZE 10
+//#define MAX_PUMPKIN_SIZE 10
 #define MAX_X 20
 #define MAX_Y 20
-
+#define num_pumpkins 10
 //double DELAY=1.0;
 
 enum {LEFT=1, UP, RIGHT, DOWN, STOP_GAME='Q', CONTROLS=3};
@@ -57,15 +57,16 @@ typedef struct Drone_t {
 } Drone_t;
 
 pumpkin_t initPUMPKIN();
+void generatePUMPKIN(pumpkin_t pumpkins[], int num);
 HANDLE initializeConsole();
 void hide_cursor(HANDLE hConsole); 
 void set_drone_color(int color, struct Drone_t *drone);
 void apply_drone_color(struct Drone_t *drone, HANDLE hConsole);
-void generateDroneDirection(Drone_t *drone, pumpkin_t *pumpkin);
+void generateDroneDirection(Drone_t *drone, pumpkin_t pumpkins[]);
 void show_color_menu(struct Drone_t *drone);
 struct Drone_t initDrone(int x, int y, size_t tsize);
-void printDrone(struct Drone_t drone, struct Drone_t drone2, pumpkin_t pumpkin, HANDLE hConsole);
-Drone_t moveDir(Drone_t drone, int32_t dir, pumpkin_t *pumpkin);
+void printDrone(struct Drone_t drone, struct Drone_t drone2, pumpkin_t pumpkins[], HANDLE hConsole);
+Drone_t moveDir(Drone_t drone, int32_t dir, pumpkin_t pumpkins[]);
 void gotoxy(int x,int y);
 _Bool IsCrashed(struct Drone_t *drone);
 void chageDirection(struct Drone_t* drone, const int32_t key);
@@ -73,7 +74,8 @@ int checkDirection(Drone_t* drone, const int32_t key);
 void printExit(struct Drone_t *drone,struct Drone_t *drone2);
 //void InitConsole()
 void save_state(Drone_t *drone /*, pumpkin_t pumpkin*/);
-//void load_state(); HANDLE hConsole;
+void load_state();
+// HANDLE hConsole;
 //hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 void startMenu(struct Drone_t *drone, struct Drone_t *drone2 );
 #endif // CURS_DRON_H
